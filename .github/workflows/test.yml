@@ -20,10 +20,9 @@ jobs:
         path: ~/.cache/pip
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          - ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/requirements.txt') }}
+          - ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements.txt
     - name: Run unitests
-      run: python -m unittest
+      run: python3 -m unittest tests/test_watchdog.py

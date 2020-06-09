@@ -10,6 +10,26 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
+def email_notification(text, enabled=config.EMAIL_NOTIFICATION):
+    if not enabled:
+        return
+
+    message = Mail(
+        from_email=config.SENDER,
+        to_emails=config.EMAIL,
+        subject='Manning Book sale!',
+        html_content='{}'.format(text)
+    )
+    try:
+        sg = SendGridAPIClient(env.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e)
+
+
 class BookWatchDog:
 
     def __init__(self, url):
@@ -32,25 +52,6 @@ class BookWatchDog:
 
         return book_name, book_price
 
-    def email_notification(self, text, enabled=False):
-        if not enabled:
-            return
-
-        message = Mail(
-            from_email=config.sender,
-            to_emails=config.email,
-            subject='Pozor knížka je v akci!',
-            html_content='{}'.format(text)
-        )
-        try:
-            sg = SendGridAPIClient(env.get('SENDGRID_API_KEY'))
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
-        except Exception as e:
-            print(e)
-
 
 if __name__ == '__main__':
     for book_url, max_price in config.books:
@@ -61,5 +62,5 @@ if __name__ == '__main__':
             msg = '{}: {}'.format(book, price)
             print(msg)
             if price <= max_price:
-                scraper.email_notification(msg)
+                email_notification(msg)
         time.sleep(5)
