@@ -1,11 +1,11 @@
 name: Release PR builder
 
 on:
-  pull_request_target:
-    branches:
-      - master
-    types:
-      - opened
+  push:
+#    branches:
+#      - master
+#    types:
+#      - opened
 
 jobs:
   release-pr-builder:
@@ -13,9 +13,20 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2
-      - name: DEBUG
+      - name: "PIP Cache"
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pip-modules
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-gha-${{ env.cache-name }}-${{ hashFiles('.github/scripts/requirements.txt') }}
+          restore-keys: |
+            - ${{ runner.os }}-gha-${{ env.cache-name }}-${{ hashFiles('.github/scripts/requirements.txt') }}
+            - ${{ runner.os }}-gha-${{ env.cache-name }}-
+      - name: "Install dependencies"
+        run: pip install -r .github/scripts/requirements.txt
+      - name: Run
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "::ENV" && env && echo "---"
-      - run: echo "Do something"
+          python3 .github/scripts/gh_api.py
