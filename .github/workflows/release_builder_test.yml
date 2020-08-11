@@ -1,0 +1,21 @@
+name: Release PR builder
+
+on:
+  pull_request_target:
+    branches:
+      - master
+    types:
+      - opened
+
+jobs:
+  release-pr-builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: DEBUG
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "::ENV" && env && echo "---"
+      - run: echo "Do something"
