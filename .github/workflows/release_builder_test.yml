@@ -18,4 +18,4 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "::ENV" && env && echo "---"
-      - run: echo "Do something"
+      - run: echo "Do something ..."
