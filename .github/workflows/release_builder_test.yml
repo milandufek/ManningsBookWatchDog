@@ -19,12 +19,12 @@ jobs:
           cache-name: cache-pip-modules
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-gha-${{ env.cache-name }}-${{ hashFiles('.github/scripts/requirements.txt') }}
+          key: ${{ runner.os }}-watchdog-${{ env.cache-name }}-${{ hashFiles('.github/scripts/requirements.txt') }}
           restore-keys: |
-            - ${{ runner.os }}-gha-${{ env.cache-name }}-${{ hashFiles('.github/scripts/requirements.txt') }}
-            - ${{ runner.os }}-gha-${{ env.cache-name }}-
+            - ${{ runner.os }}-watchdog-${{ env.cache-name }}-${{ hashFiles('.github/scripts/requirements.txt') }}
+            - ${{ runner.os }}-watchdog-${{ env.cache-name }}-
       - name: "Install dependencies"
-        run: pip install -r .github/scripts/requirements.txt
+        run: pip3 install -r .github/scripts/requirements.txt
       - name: Run
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}

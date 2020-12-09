@@ -1,7 +1,6 @@
 name: Python test
 
 on:
-  workflow_dispatch:
   push:
 
 jobs:
@@ -22,7 +21,9 @@ jobs:
           - ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/requirements.txt') }}
           - ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip3 install -r requirements.txt
+      run: |
+        sudo apt-get install python-setuptools
+        pip3 install -r requirements.txt
     - name: Run unitests
       run: python3 -m unittest tests/test_watchdog.py
 
